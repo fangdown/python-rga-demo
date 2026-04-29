@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/python-rga/assets/:path*",
+      "destination": "/assets/:path*"
+    },
+    {
+      "source": "/python-rga/favicon.svg",
+      "destination": "/favicon.svg"
+    },
+    {
+      "source": "/python-rga/icons.svg",
+      "destination": "/icons.svg"
+    },
+    {
+      "source": "/python-rga",
+      "destination": "/"
+    },
+    {
+      "source": "/python-rga/",
+      "destination": "/"
+    }
+  ]
+}
