@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1040" viewBox="0 0 1600 1040" role="img" aria-labelledby="title desc">
+  <title id="title">RAG frontend and backend sequence diagram</title>
+  <desc id="desc">Sequence diagram showing document upload, retrieval, streaming answer generation, and document deletion.</desc>
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .surface { fill: #faf8f5; }
+      .ink { fill: #000000; }
+      .muted { fill: #72706b; }
+      .soft { fill: #92918b; }
+      .line { stroke: #d8d4cc; stroke-width: 2; }
+      .dash { stroke: #c9c4ba; stroke-width: 2; stroke-dasharray: 8 8; }
+      .flow { stroke: #27251e; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .return { stroke: #72706b; stroke-width: 2; fill: none; stroke-dasharray: 6 6; marker-end: url(#arrowSoft); }
+      .box { fill: #faf8f5; stroke: #d8d4cc; stroke-width: 1.5; }
+      .pill { fill: #27251e; }
+      .title { font: 500 34px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #000000; }
+      .subtitle { font: 400 16px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #72706b; }
+      .label { font: 500 15px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #000000; }
+      .small { font: 400 13px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #72706b; }
+      .step { font: 400 14px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #27251e; }
+      .pillText { font: 400 12px Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #ffffff; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#27251e"/>
+    </marker>
+    <marker id="arrowSoft" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#72706b"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1600" height="1040"/>
+  <rect class="surface" x="40" y="34" width="1520" height="972" rx="28"/>
+
+  <text class="title" x="80" y="92">RAG Knowledge Base Sequence</text>
+  <text class="subtitle" x="80" y="124">Document upload, vector retrieval, streaming answer generation, and document management.</text>
+  <rect class="pill" x="1326" y="68" width="154" height="34" rx="17"/>
+  <text class="pillText" x="1355" y="90">python-rga-demo</text>
+
+  <g id="participants">
+    <rect class="box" x="80" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="120" y="205">User</text>
+
+    <rect class="box" x="250" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="281" y="196">React</text>
+    <text class="small" x="284" y="214">Frontend</text>
+
+    <rect class="box" x="420" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="444" y="196">RAG API</text>
+    <text class="small" x="462" y="214">FastAPI</text>
+
+    <rect class="box" x="590" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="609" y="196">Parser</text>
+    <text class="small" x="615" y="214">PDF / Word</text>
+
+    <rect class="box" x="760" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="794" y="196">Embed</text>
+    <text class="small" x="782" y="214">MiniLM</text>
+
+    <rect class="box" x="930" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="960" y="196">Vector</text>
+    <text class="small" x="961" y="214">Store</text>
+
+    <rect class="box" x="1100" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="1145" y="205">LLM</text>
+
+    <rect class="box" x="1270" y="172" width="130" height="56" rx="16"/>
+    <text class="label" x="1304" y="196">React</text>
+    <text class="small" x="1297" y="214">Renderer</text>
+  </g>
+
+  <g id="lifelines">
+    <line class="dash" x1="145" y1="228" x2="145" y2="950"/>
+    <line class="dash" x1="315" y1="228" x2="315" y2="950"/>
+    <line class="dash" x1="485" y1="228" x2="485" y2="950"/>
+    <line class="dash" x1="655" y1="228" x2="655" y2="950"/>
+    <line class="dash" x1="825" y1="228" x2="825" y2="950"/>
+    <line class="dash" x1="995" y1="228" x2="995" y2="950"/>
+    <line class="dash" x1="1165" y1="228" x2="1165" y2="950"/>
+    <line class="dash" x1="1335" y1="228" x2="1335" y2="950"/>
+  </g>
+
+  <g id="upload">
+    <rect class="pill" x="80" y="260" width="94" height="28" rx="14"/>
+    <text class="pillText" x="103" y="279">Upload</text>
+
+    <path class="flow" d="M145 320 H315"/>
+    <text class="step" x="172" y="309">select PDF / Word</text>
+
+    <path class="flow" d="M315 360 H485"/>
+    <text class="step" x="334" y="349">POST /documents</text>
+
+    <path class="flow" d="M485 400 H655"/>
+    <text class="step" x="510" y="389">parse text</text>
+
+    <path class="return" d="M655 440 H485"/>
+    <text class="small" x="534" y="429">text content</text>
+
+    <path class="flow" d="M485 480 H825"/>
+    <text class="step" x="560" y="469">split chunks and create embeddings</text>
+
+    <path class="return" d="M825 520 H485"/>
+    <text class="small" x="609" y="509">embedding vectors</text>
+
+    <path class="flow" d="M485 560 H995"/>
+    <text class="step" x="644" y="549">save chunks and vectors</text>
+
+    <path class="return" d="M995 600 H315"/>
+    <text class="small" x="572" y="589">doc_id / filename / chunk_count</text>
+  </g>
+
+  <line class="line" x1="80" y1="636" x2="1480" y2="636"/>
+
+  <g id="ask">
+    <rect class="pill" x="80" y="666" width="118" height="28" rx="14"/>
+    <text class="pillText" x="107" y="685">Ask RAG</text>
+
+    <path class="flow" d="M145 726 H315"/>
+    <text class="step" x="181" y="715">send question</text>
+
+    <path class="flow" d="M315 766 H485"/>
+    <text class="step" x="336" y="755">POST /ask/stream</text>
+
+    <path class="flow" d="M485 806 H825"/>
+    <text class="step" x="575" y="795">embed question</text>
+
+    <path class="flow" d="M485 846 H995"/>
+    <text class="step" x="621" y="835">retrieve similar chunks</text>
+
+    <path class="return" d="M995 886 H485"/>
+    <text class="small" x="676" y="875">citations and context</text>
+
+    <path class="flow" d="M485 926 H1165"/>
+    <text class="step" x="704" y="915">generate answer with context</text>
+
+    <path class="return" d="M1165 966 H1335"/>
+    <text class="small" x="1196" y="955">SSE token stream</text>
+
+    <path class="return" d="M1335 926 H315"/>
+    <text class="small" x="744" y="950">Markdown preview + auto-scroll + citations</text>
+  </g>
+
+  <g id="delete">
+    <rect class="box" x="1120" y="270" width="320" height="148" rx="20"/>
+    <text class="label" x="1150" y="306">Document deletion</text>
+    <text class="small" x="1150" y="334">1. User clicks delete in sidebar</text>
+    <text class="small" x="1150" y="360">2. Frontend calls DELETE /documents/{doc_id}</text>
+    <text class="small" x="1150" y="386">3. API removes document chunks and vectors</text>
+  </g>
+</svg>

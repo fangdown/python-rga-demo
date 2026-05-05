@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { useEffect, useMemo, useState } from 'react'
-import { getRagBaseURL } from './api/client'
+import { useEffect, useState } from 'react'
 import { ChatPanel } from './components/ChatPanel'
 import { DocumentSidebar } from './components/DocumentSidebar'
 import './rag-layout.css'
@@ -20,8 +19,6 @@ export default function App() {
     return () => window.clearTimeout(t)
   }, [toast])
 
-  const base = useMemo(() => getRagBaseURL(), [])
-
   return (
     <QueryClientProvider client={queryClient}>
       <div className="rag-shell">
@@ -32,9 +29,6 @@ export default function App() {
           onError={(msg) => setToast({ text: msg, kind: 'error' })}
         />
       </div>
-      <footer className="rag-api-badge" title={base}>
-        API: {base}
-      </footer>
       {toast && (
         <div
           className="rag-toast"
