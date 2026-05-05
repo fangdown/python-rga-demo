@@ -53,13 +53,16 @@ export function DocumentSidebar({
   };
 
   return (
-    <aside className="rag-sidebar">
+    <aside className="rag-sidebar" id="documents">
       <div className="rag-sidebar-header">
-        <h1>知识库</h1>
+        <div className="rag-section-label">Documents</div>
+        <h2>知识库</h2>
         <p>上传 PDF / Word，右侧基于库内文档问答</p>
-        <p className="rag-sidebar-tip">
-          提示：若上下文不足，可尝试上传相关文档或改写问题关键词。
-        </p>
+        <div className="rag-sidebar-tags" aria-label="文档能力">
+          <span className="rag-tag rag-tag-dark">Vector</span>
+          <span className="rag-tag">PDF</span>
+          <span className="rag-tag">Word</span>
+        </div>
       </div>
       <div className="rag-upload">
         <label className="rag-upload-label">
@@ -88,6 +91,10 @@ export function DocumentSidebar({
         )}
       </div>
       <div className="rag-doc-list">
+        <div className="rag-list-head">
+          <span>已索引文档</span>
+          <span>{docsQuery.data?.length ?? 0}</span>
+        </div>
         {docsQuery.isLoading && <div className="rag-empty">加载文档列表…</div>}
         {docsQuery.isError && (
           <div className="rag-empty">

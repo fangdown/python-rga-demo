@@ -32,16 +32,7 @@ export default function App() {
           onError={(msg) => setToast({ text: msg, kind: 'error' })}
         />
       </div>
-      <footer
-        style={{
-          position: 'fixed',
-          top: 6,
-          right: 10,
-          fontSize: 11,
-          color: 'var(--text-muted)',
-          pointerEvents: 'none',
-        }}
-      >
+      <footer className="rag-api-badge" title={base}>
         API: {base}
       </footer>
       {toast && (

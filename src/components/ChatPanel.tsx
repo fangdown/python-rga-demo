@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { askStream, retrieve } from "../api/rag";
 import { getApiErrorMessage } from "../api/errors";
 import type { AskStreamDoneEvent, Chunk } from "../api/types";
@@ -40,6 +40,7 @@ export function ChatPanel({ onError }: { onError: (msg: string) => void }) {
   const streamAssistantIdRef = useRef<string | null>(null);
   const pendingTokenBufferRef = useRef("");
   const rafFlushRef = useRef<number | null>(null);
+  const chatScrollRef = useRef<HTMLDivElement | null>(null);
 
   const topKValid = useMemo(() => clampTopK(topK), [topK]);
 
@@ -50,6 +51,15 @@ export function ChatPanel({ onError }: { onError: (msg: string) => void }) {
   });
 
   const pending = isStreaming || runRetrieve.isPending;
+
+  useEffect(() => {
+    const el = chatScrollRef.current;
+    if (!el) return;
+    const raf = window.requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+    return () => window.cancelAnimationFrame(raf);
+  }, [messages]);
 
   const flushPendingTokens = useCallback((assistantId: string) => {
     const chunk = pendingTokenBufferRef.current;
@@ -234,66 +244,58 @@ export function ChatPanel({ onError }: { onError: (msg: string) => void }) {
   }
 
   return (
-    <main className="rag-main">
+    <main className="rag-main" id="chat">
       <div className="rag-toolbar">
-        <div className="rag-seg" role="group" aria-label="模式">
-          <button
-            type="button"
-            data-on={mode === "ask"}
-            onClick={() => setMode("ask")}
-          >
-            问答（RAG）
-          </button>
-          <button
-            type="button"
-            data-on={mode === "retrieve"}
-            onClick={() => setMode("retrieve")}
-          >
-            仅检索
-          </button>
+        <div className="rag-toolbar-title">
+          <div className="rag-section-label">Console</div>
+          <h2>问答控制台</h2>
         </div>
-        <label>
-          top_k
-          <input
-            type="number"
-            min={1}
-            max={20}
-            value={topK}
-            onChange={(e) => setTopK(Number(e.target.value))}
-          />
-        </label>
-        <span className="rag-hint">
-          与接口一致：1–20；问答 POST /ask/stream，检索 POST /retrieve
-        </span>
+        <div className="rag-toolbar-controls">
+          <div className="rag-seg" role="group" aria-label="模式" id="retrieve">
+            <button
+              type="button"
+              data-on={mode === "ask"}
+              onClick={() => setMode("ask")}
+            >
+              问答（RAG）
+            </button>
+            <button
+              type="button"
+              data-on={mode === "retrieve"}
+              onClick={() => setMode("retrieve")}
+            >
+              仅检索
+            </button>
+          </div>
+          <label>
+            top_k
+            <input
+              type="number"
+              min={1}
+              max={20}
+              value={topK}
+              onChange={(e) => setTopK(Number(e.target.value))}
+            />
+          </label>
+        </div>
       </div>
 
-      <div className="rag-chat-scroll">
-        {!messages.length && (
-          <div className="rag-empty">
-            在下方输入问题。左侧管理文档后，「问答」会结合向量检索与模型生成答案并附带引用。
-          </div>
-        )}
+      <div className="rag-chat-scroll" ref={chatScrollRef}>
         {messages.map((msg) =>
           msg.role === "user" ? (
             <div key={msg.id} className="rag-msg rag-msg-user">
-              <div className="rag-role">你</div>
               <div className="rag-bubble">
                 <MessageContent text={msg.content} />
               </div>
             </div>
           ) : (
             <div key={msg.id} className="rag-msg rag-msg-assistant">
-              <div className="rag-role">
-                {msg.mode === "ask" ? "助手" : "检索片段"}
-              </div>
               <div className="rag-bubble">
                 {msg.mode === "ask" && !msg.content.trim() ? (
                   <div className="rag-thinking" aria-live="polite">
                     <span className="rag-thinking-dot" />
                     <span>正在思考并组织答案</span>
                   </div>
-                ) : msg.mode === "ask" && msg.streaming ? (
-                  <p className="rag-msg-paragraph">{msg.content}</p>
                 ) : (
                   <MessageContent text={msg.content} />
                 )}
@@ -356,7 +358,7 @@ export function ChatPanel({ onError }: { onError: (msg: string) => void }) {
               </button>
             )}
           </div>
-          <div className="rag-hint">Enter 发送，Shift+Enter 换行</div>
+          <div className="rag-hint">Enter 发送 · Shift+Enter 换行 · top_k 1-20</div>
         </div>
       </div>
     </main>
